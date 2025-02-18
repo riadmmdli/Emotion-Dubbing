@@ -45,6 +45,18 @@ class EmotionDubbingApp:
         self.text_entry = ttk.Text(input_frame, height=5, width=60, font=("Helvetica", 12), wrap="word", bd=2, relief="groove")
         self.text_entry.pack(pady=10)
 
+        # Voice selection frame
+        voice_frame = ttk.Frame(root, padding=10)
+        voice_frame.pack(fill=X, padx=20)
+
+        self.voice_label = ttk.Label(voice_frame, text="Select Voice:", font=("Helvetica", 12, "bold"))
+        self.voice_label.pack(side=LEFT)
+
+        # ComboBox for selecting voice ID
+        self.voice_combobox = ttk.Combobox(voice_frame, values=["nPczCjzI2devNBz1zQrb", "g5CIjZEefAph4nQFvHAz", "9BWtsMINqrJLrRacOk9x"], state="readonly", font=("Helvetica", 12))
+        self.voice_combobox.set("nPczCjzI2devNBz1zQrb")  # Default voice ID
+        self.voice_combobox.pack(pady=10, side=LEFT)
+
         # Buttons frame
         button_frame = ttk.Frame(root, padding=10)
         button_frame.pack(fill=X, pady=10)
@@ -152,10 +164,13 @@ class EmotionDubbingApp:
                 results.append((sentence.strip(), emotion, confidence))
                 combined_text += sentence.strip() + " "
 
-        # Generate TTS audio stream
+        # Get selected voice ID from ComboBox
+        selected_voice = self.voice_combobox.get()
+
+        # Generate TTS audio stream with selected voice
         audio_stream = client.text_to_speech.convert_as_stream(
             text=combined_text,
-            voice_id="nPczCjzI2devNBz1zQrb",
+            voice_id=selected_voice,
             model_id="eleven_multilingual_v2"
         )
 
